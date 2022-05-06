@@ -1,1 +1,1 @@
-# Mulltiple-Goal-PRM
+# Multiple-Goal-PRM
