@@ -11,6 +11,9 @@ from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
 from math import atan2
+from PRM import run
+
+# Initialization
 x = 0.0
 y= 0.0
 theta = 0.0
@@ -35,7 +38,8 @@ speed = Twist()
 r = rospy.Rate(5)  # Transmission frequency in Hz
 goal = Point()
 
-path = [(0, 0), (2, 0), (2, 3), (5, 5)]
+# path = [(0, 0), (2, 0), (2, 3), (5, 5)] # Debug (5)
+path = run()
 
 rospy.loginfo_once("Running Trajectory Controller -----")
 while not rospy.is_shutdown():
@@ -52,24 +56,29 @@ while not rospy.is_shutdown():
             inc_y = goal.y - y
             angle_to_goal = atan2(inc_y, inc_x)
 
-            if inc_x < 0.1 and inc_y < 0.1:
+            if abs(inc_x) < 0.1 and abs(inc_y) < 0.1:
 
                 rospy.loginfo("Reached Node (%f, %f)" % (goal.x, goal.y))
                 speed.linear.x = 0.0
                 speed.angular.z = 0.0
                 reached = True
-                print("Debug ==> 10")
+                # print("Debug ==> 10")
 
-            elif abs(angle_to_goal - theta) > 0.3:
+            elif (angle_to_goal - theta) > 0.3:
                 speed.linear.x = 0.0
                 speed.angular.z = 0.3
-                rospy.loginfo_once("Orienting to goal position")
-                print("Debug ==> 20")
+                rospy.loginfo_throttle(35, "Orienting to goal position")
+                # print("Debug ==> 20")
+
+            elif (angle_to_goal - theta) < 0.0:
+                speed.linear.x = 0.0
+                speed.angular.z = -0.3
+                rospy.loginfo_throttle(35, "Orienting to goal position")
 
             else:
                 speed.linear.x = 0.5
                 speed.angular.z = 0.0
-                print("Debug ==> 30")
+                # print("Debug ==> 30")
 
             pub.publish(speed)
             r.sleep()
