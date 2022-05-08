@@ -1,0 +1,8 @@
+<launch>
+  <include file="$(find multi_goal_prm)/launch/prm_turtlebot3.launch">
+  </include>
+ 
+  <arg name="node_start_delay" default="1.0" />  
+  <node name="trajectory_controller" pkg="multi_goal_prm" type="robot_controller.py" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " output="screen" />
+
+</launch>
