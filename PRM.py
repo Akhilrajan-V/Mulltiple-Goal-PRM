@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-ENPM661: Project 2
+ENPM661: Project 5
 
 Akhilrajan Vethirajan (v.akhilrajan@gmail.com)
 Vishaal Kanna Sivakumar (vishaal@terpmail.umd.edu)
@@ -17,45 +17,32 @@ import time
 import cv2
 import math
 import random
+from itertools import permutations
 
 
 def map_gen():
     map = np.zeros((250,400))
-    c=0
+    c=20
     for y in range(1,map.shape[0]+1):
         for x in range(1, map.shape[1]+1):
-            # if x>=165-c and x<=235+c and ((map.shape[0]-(140+c)-map.shape[0]+(120+c/1.414))/((200)-(235+c/1.414)))*(x-(235+c/1.414))+map.shape[0]-(120+c/1.414)<=y and ((map.shape[0]-(140+c)-map.shape[0]+(120+c/1.414))/((200)-(165-c/1.414)))*(x-(165-c/1.414))+map.shape[0]-(120+c/1.414)<=y and ((map.shape[0]-(80-c/1.414)-map.shape[0]+(60-c))/((165-c/1.414)-(200)))*(x-(200))+map.shape[0]-(60-c)>=y and ((map.shape[0]-(80-c/1.414)-map.shape[0]+(60-c))/((235+c/1.414)-200))*(x-200)+map.shape[0]-(60-c)>=y:
-            #     map[y-1][x-1]=10000
-            # if ((map.shape[0]-(210+c/1.414)-map.shape[0]+(185))/((115+c/1.414)-(36-c)))*(x-(36-c))+map.shape[0]-185<=y and ((map.shape[0]-(100-c/1.414)-map.shape[0]+185)/((105+c/1.414)-(36-c)))*(x-(36-c))+map.shape[0]-185>=y and ((map.shape[0]-(210+c/1.414)-map.shape[0]+180)/((115+c/1.414)-(75+c))*(x-(75+c))+map.shape[0]-180>=y or ((map.shape[0]-180-map.shape[0]+(100-c/1.414))/((75+c)-(105+c/1.414)))*(x-(105+c/1.414))+map.shape[0]-(100-c/1.414)<=y):
-            #     map[y-1][x-1]=10000
-            # if (x-300)**2+(y-map.shape[0]+185)**2<=(40+c)**2:
-            #     map[y-1][x-1]=10000
-            #if x>250 and x<275:
-            #	map[y-1][x-1]=1
             if x>=40+20 and x<=120+20 and y>=30 and y<=100:
                 map[y - 1][x - 1] = 10000
             if x>=200+20 and x<=280+20 and y>=30 and y<=100:
                 map[y - 1][x - 1] = 10000
-            # if x>=200+20 and x<=240+20 and y>=30 and y<=100:
-            #     map[y - 1][x - 1] = 10000
-            # if x>=280+20 and x<=320+20 and y>=30 and y<=100:
-            #     map[y - 1][x - 1] = 10000
             if x>=40+20 and x<=80+20 and y>=140 and y<=220:
                 map[y - 1][x - 1] = 10000
-            # if x>=120+20 and x<=160+20 and y>=140 and y<=220:
-            #     map[y - 1][x - 1] = 10000
             if x>=200+20 and x<=240+20 and y>=140 and y<=220:
                 map[y - 1][x - 1] = 10000
             if x>=280+20 and x<=320+20 and y>=140 and y<=220:
                 map[y - 1][x - 1] = 10000
-            if x>0 and x<=c:
-                map[y - 1][x - 1] = 10000
-            if x>400-c and x<=400:
-                map[y - 1][x - 1] = 10000
-            if y>0 and y<=c:
-                map[y - 1][x - 1] = 10000
-            if y>250-c and y<=250:
-                map[y - 1][x - 1] = 10000
+            # if x>0 and x<=c:
+            #     map[y - 1][x - 1] = 10000
+            # if x>400-c and x<=400:
+            #     map[y - 1][x - 1] = 10000
+            # if y>0 and y<=c:
+            #     map[y - 1][x - 1] = 10000
+            # if y>250-c and y<=250:
+            #     map[y - 1][x - 1] = 10000
     return map
 
 class Graph:
@@ -69,11 +56,10 @@ class Graph:
         self.nodes.append([0, start_node])
         cv2.circle(map_color, (start_node[0], start_node[1]), 5, [255, 255, 255], 10)
         for i in range(len(Goal_nodes)):
-            # d = ((start_node[0] - Goal_nodes[i][0]) ** 2 + (start_node[1] - Goal_nodes[i][1]) ** 2) ** 0.5
             self.nodes.append([i, Goal_nodes[i]])
             cv2.circle(map_color, (Goal_nodes[i][0], Goal_nodes[i][1]), 5, [255, 255, 255], 10)
         i = 0
-        random.seed(10)
+        random.seed(25)
         while i < self.N-len(Goal_nodes)-1:
             x = random.randint(0, map1.shape[1] - 1)
             y = random.randint(0, map1.shape[0] - 1)
@@ -84,8 +70,6 @@ class Graph:
             self.nodes.append([d,[x, y]])
             i += 1
         self.nodes.sort()
-        # cv2.imshow('Map with Nodes', map1)
-        # cv2.waitKey(0)
 
     def roadmap(self, map1, map_color):
         for i in range(0, self.N):
@@ -206,10 +190,10 @@ class Graph:
                 quit()
         return Closed_list
 
-def main():
-    No_nodes = 70
+def run():
+    No_nodes = 80
     start_node = [20,20]
-    Goal_nodes = [[120,120],[250,240],[150,20],[350,50]]
+    Goal_nodes = [[30,180],[250,240],[150,30],[350,50]]
     map = map_gen()
     map1 = map.copy()
     map_obstacle = np.zeros((250, 400))
@@ -221,23 +205,65 @@ def main():
     PRM.roadmap(map1,map_color1)
     all_paths = []
     for i in range(0,len(Goal_nodes)+1):
-        for j in range(i+1, len(Goal_nodes)+1):
+        for j in range(0, len(Goal_nodes)+1):
+            # if i==j:
+            #     continue
             Closed_list = PRM.Astar(i, j)
             paths = []
             paths.append(Closed_list[len(Closed_list) - 1][3])
             PRM.generate_path(paths, Closed_list, Closed_list[len(Closed_list) - 1][2])
             all_paths.append(paths)
 
+    map_obstacle = np.zeros((250, 400))
+    map_obstacle[map == 10000] = 1
+    map_color1 = np.zeros((250, 400, 3))
+    map_color1[:, :, 2] = map_obstacle * 255
+    tsp =[]
+
     for n,path in enumerate(all_paths):
-        map_obstacle = np.zeros((250, 400))
-        map_obstacle[map == 10000] = 1
-        map_color1 = np.zeros((250, 400, 3))
-        map_color1[:, :, 2] = map_obstacle * 255
+        d=0
+        tmp = []
+        tmp.append(path[0])
+        for i in range(0,len(path)-1):
+            d += ((PRM.nodes[path[i]][1][0]-PRM.nodes[path[i+1]][1][0])**2 + (PRM.nodes[path[i]][1][1]-PRM.nodes[path[i+1]][1][1])**2)**0.5
+            # cv2.line(map_color1, (PRM.nodes[path[i]][1][0], PRM.nodes[path[i]][1][1]),(PRM.nodes[path[i+1]][1][0], PRM.nodes[path[i+1]][1][1]), [255,0,0], 1)
+            tmp.append(path[i+1])
+        tsp.append([d,tmp])
+
+    perm = permutations([1,2,3,4])
+
+    dmin = 1000000000000
+    for i in list(perm):
+        d=tsp[0*5+i[0]][0]
+        for j in range(0,3):
+            d += tsp[i[j]*5+i[j+1]][0]
+        if d<=dmin:
+            dmin=d
+            final_path = i
+
+    total_path=[]
+
+    for i in range(0,3):
+        if i==0:
+            total_path.append(tsp[0 * 5 + final_path[0]][1])
+        total_path.append(tsp[final_path[i]*5+final_path[i+1]][1])
+
+    total_path.append(tsp[final_path[3] * 5 + 0][1])
+
+    coords = []
+
+    for l in range(0,len(total_path)):
+        path = total_path[len(total_path)-l-1]
+        coords.append((PRM.nodes[path[0]][1][0], PRM.nodes[path[0]][1][1]))
         for i in range(0,len(path)-1):
             cv2.line(map_color1, (PRM.nodes[path[i]][1][0], PRM.nodes[path[i]][1][1]),(PRM.nodes[path[i+1]][1][0], PRM.nodes[path[i+1]][1][1]), [255,0,0], 1)
+            coords.append((PRM.nodes[path[i+1]][1][0], PRM.nodes[path[i+1]][1][1]))
         cv2.imshow('Map',map_color1)
         cv2.waitKey(0)
 
+    print(coords)
+    return coords
+
 if __name__ == '__main__':
-    main()
+    run()
 
