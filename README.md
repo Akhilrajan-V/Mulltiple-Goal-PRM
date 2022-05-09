@@ -10,3 +10,22 @@ This repository consists the source code and files for the Multiple Goal Positio
 - heapq
 - Matplotlib
 - Cv2
+- 
+## To visualize the planner in action 
+
+1. Open a new terminal and cd into the scripts sub-directory
+2. Make sure the script PRM_vis.py  is executable
+
+	> chmod +x PRM_vis.py
+
+3. To run the file,
+
+	> python3 PRM_vis.py 
+
+## To Run Gazebo Simulation
+
+1. Copy the package directory named multi_goal_prm inside the catkin package directory to your catkin workspace.
+2. Build your catkin workspace.
+3. To launch the package type 
+
+	> roslaunch multi_goal_prm prm_sim.launch
