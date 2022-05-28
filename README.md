@@ -10,8 +10,8 @@ This repository consists the source code and files for the Multiple Goal Positio
 - Numpy
 - heapq
 - Matplotlib
-- Cv2
-- 
+- OpenCV (Cv2)
+
 ## To visualize the planner in action 
 ![output](/Outputs/TSP_graph.gif)   ![output](/Outputs/Final_path.gif)
 
